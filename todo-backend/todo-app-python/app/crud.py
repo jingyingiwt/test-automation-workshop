@@ -10,6 +10,10 @@ def get_todo_by_id(db: Session, todo_id: int):
     return db.query(models.TodoItem).filter(models.TodoItem.id == todo_id).first()
 
 
+def get_todos_by_completed(db: Session):
+    return db.query(models.TodoItem).filter(models.TodoItem.completed == True).all()
+
+
 def create_todo(db: Session, todo: schemas.TodoCreate):
     db_todo = models.TodoItem(**todo.dict())
     db.add(db_todo)

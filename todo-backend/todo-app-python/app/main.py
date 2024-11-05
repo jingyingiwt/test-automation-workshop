@@ -51,3 +51,13 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     if db_todo is None:
         raise HTTPException(status_code=404, detail="Todo not found")
     return {"detail": "Todo deleted"}
+
+
+@app.post("/todos/clear-completed")
+def create_completed_todos(db: Session = Depends(get_db)):
+    todos = crud.get_todos_by_completed(db)
+    deleting_ids = [todo.id for todo in todos]
+    for deleting_id in deleting_ids:
+        if crud.delete_todo(db, deleting_id) is None:
+            raise HTTPException(status_code=400, detail="Unexpected error")
+    return {"message": "Completed Tasks Deleted"}
